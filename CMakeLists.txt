@@ -11,14 +11,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # CoreMIDI
-if(RTMIDI_API_CORE)
-  list(APPEND API_DEFS "-D__MACOSX_CORE__")
-  list(APPEND API_LIST "coremidi")
-  list(APPEND LINKLIBS "-framework CoreServices")
-  list(APPEND LINKLIBS "-framework CoreAudio")
-  list(APPEND LINKLIBS "-framework CoreMIDI")
-  list(APPEND LINKLIBS "-framework CoreFoundation")
-  list(APPEND LINKFLAGS "-Wl,-F/Library/Frameworks")
-endif()
+list(APPEND API_DEFS "-D__MACOSX_CORE__")
+list(APPEND API_LIST "coremidi")
+list(APPEND LINKLIBS "-framework CoreServices")
+list(APPEND LINKLIBS "-framework CoreAudio")
+list(APPEND LINKLIBS "-framework CoreMIDI")
+list(APPEND LINKLIBS "-framework CoreFoundation")
+list(APPEND LINKFLAGS "-Wl,-F/Library/Frameworks")
+
 
 add_executable(main src/main.cpp)
+target_link_libraries(main ${LINKLIBS})
