@@ -21,9 +21,12 @@ list(APPEND LINKFLAGS "-Wl,-F/Library/Frameworks")
 
 find_library(RTMIDI rtmidi REQUIRED)
 
+include_directories (include)
 
 add_executable(main src/main.cpp)
 
-target_link_libraries (main ${RTMIDI})
+# set(INCLUDE_DIR include)
 
+target_include_directories( main PRIVATE include)
+target_link_libraries (main ${RTMIDI})
 target_link_libraries(main ${LINKLIBS})

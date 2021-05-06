@@ -7,3 +7,4 @@
 !readme.md
 !lib
 !include
+!include/**/**

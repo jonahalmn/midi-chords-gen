@@ -4,6 +4,7 @@
 #include <CoreMIDI/CoreMIDI.h>
 #include <CoreFoundation/CFRunLoop.h>
 #include <rtmidi.h>
+#include "../include/intervals.hpp"
 
 #define PACKETLIST_SIZE 512
 
@@ -44,7 +45,7 @@ int main() {
     message.push_back(64);
     message.push_back(90);
 
-    unsigned int i = 1;
+    unsigned int i = 0;
     
     midiout->openPort( 0 );
     
