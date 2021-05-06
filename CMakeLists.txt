@@ -19,6 +19,11 @@ list(APPEND LINKLIBS "-framework CoreMIDI")
 list(APPEND LINKLIBS "-framework CoreFoundation")
 list(APPEND LINKFLAGS "-Wl,-F/Library/Frameworks")
 
+find_library(RTMIDI rtmidi REQUIRED)
+
 
 add_executable(main src/main.cpp)
+
+target_link_libraries (main ${RTMIDI})
+
 target_link_libraries(main ${LINKLIBS})

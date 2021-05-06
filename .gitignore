@@ -5,3 +5,5 @@
 !/src/**/**
 !CMakeLists.txt
 !readme.md
+!lib
+!include

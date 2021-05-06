@@ -1,29 +1,44 @@
 #include <iostream>
-#include <CoreMIDI/MIDIServices.h>
+#include <vector>
+#include <string>
+#include <CoreMIDI/CoreMIDI.h>
 #include <CoreFoundation/CFRunLoop.h>
+#include <rtmidi.h>
 
-MIDIPortRef     gOutPort = NULL;
-MIDIEndpointRef gDest = NULL;
-int             gChannel = 0;
+#define PACKETLIST_SIZE 512
 
 int main() {
 
     std::cout << "All is ok" << std::endl;
-
-    // create client and ports
-    MIDIClientRef client = NULL;
-    MIDIClientCreate(CFSTR("MIDI Echo"), NULL, NULL, &client);
-
-    MIDIPortRef inPort = NULL;
-    MIDIInputPortCreate(client, CFSTR("Input port"), MyReadProc, NULL, &inPort);
-    MIDIOutputPortCreate(client, CFSTR("Output port"), &gOutPort);
-
-    MIDIEndpointRef epRef = MIDIGetSource(1);
+    RtMidiOut *midiout = 0;
 
 
+    // RtMidiOut constructor
+    try {
+        midiout = new RtMidiOut();
+    }
+    catch ( RtMidiError &error ) {
+        error.printMessage();
+        exit( EXIT_FAILURE );
+    }
+    // Check outputs.
+    unsigned int nPorts = midiout->getPortCount();
+    std::cout << "\nThere are " << nPorts << " MIDI output ports available.\n";
+    std::string portName;
+    for ( unsigned int i=0; i<nPorts; i++ ) {
+        try {
+        portName = midiout->getPortName(i);
+        }
+        catch (RtMidiError &error) {
+        error.printMessage();
+        goto cleanup;
+        }
+        std::cout << "  Output Port #" << i+1 << ": " << portName << '\n';
+    }
+    std::cout << '\n';
 
-    int n = MIDIGetNumberOfDevices();
-    std::cout << n << std::endl;
+    cleanup:
+        delete midiout;
 
     return 0;
 }
