@@ -5,7 +5,6 @@
 #include <vector>
 #include <cmath>
 
-// #include "intervals.hpp"
 #include "notes.hpp"
 
 class Range {
