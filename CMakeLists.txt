@@ -2,11 +2,17 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
 # Define a C++ project.
-project(MidiEmitter LANGUAGES CXX)
+project(main)
+
+include_directories(
+        ${PROJECT_SOURCE_DIR}/include
+)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
@@ -19,14 +25,15 @@ list(APPEND LINKLIBS "-framework CoreMIDI")
 list(APPEND LINKLIBS "-framework CoreFoundation")
 list(APPEND LINKFLAGS "-Wl,-F/Library/Frameworks")
 
+# include_directories(${PROJECT_SOURCE_DIR}/include)
+
 find_library(RTMIDI rtmidi REQUIRED)
 
-include_directories (include)
+file(GLOB all_SRCS
+    "${PROJECT_SOURCE_DIR}/src/*.cpp"
+)
 
-add_executable(main src/main.cpp)
+add_executable(main ${all_SRCS})
 
-# set(INCLUDE_DIR include)
-
-target_include_directories( main PRIVATE include)
 target_link_libraries (main ${RTMIDI})
 target_link_libraries(main ${LINKLIBS})
