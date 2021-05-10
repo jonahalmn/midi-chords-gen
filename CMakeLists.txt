@@ -13,7 +13,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # CoreMIDI
@@ -29,6 +28,8 @@ list(APPEND LINKFLAGS "-Wl,-F/Library/Frameworks")
 
 find_library(RTMIDI rtmidi REQUIRED)
 
+find_package(nlohmann_json 3.2.0 REQUIRED)
+
 file(GLOB all_SRCS
     "${PROJECT_SOURCE_DIR}/src/*.cpp"
 )
@@ -37,3 +38,5 @@ add_executable(main ${all_SRCS})
 
 target_link_libraries (main ${RTMIDI})
 target_link_libraries(main ${LINKLIBS})
+target_link_libraries(main nlohmann_json::nlohmann_json)
+

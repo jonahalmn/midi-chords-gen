@@ -31,6 +31,8 @@ class Range {
                 m_notes.push_back( current_note );
             }
 
+            std::cout << "range size : " << m_notes.size() << std::endl;
+
         }
 
         unsigned char get_note(int, int);

@@ -15,3 +15,4 @@ unsigned char Range::get_note(int note, int octave) {
 
     return (int)m_notes[note % 7] + 12 * octave;
 }
+

@@ -4,6 +4,9 @@
 #include <CoreMIDI/CoreMIDI.h>
 #include <CoreFoundation/CFRunLoop.h>
 #include <rtmidi.h>
+#include <fstream>
+
+#include <nlohmann/json.hpp>
 
 #include "../include/player.hpp"
 #include "../include/phrase.hpp"
@@ -26,9 +29,10 @@ void mycallback( double deltatime, std::vector< unsigned char > *message, void *
     std::cout << "stamp = " << deltatime << std::endl;
 }
 
-int main() {
+int main(int argc, char *argv[] ) {
 
     // Range range{Note::A, 0};
+   
 
     // std::cout << (int)range.get_note(0, 2) << std::endl;
     
@@ -38,7 +42,7 @@ int main() {
     Player player{&mycallback};
     Phrase phrase;
 
-    std::vector<unsigned int> phrase_now = phrase.generate_phrase();
+    std::vector<std::vector<unsigned int>> phrase_now = phrase.generate_phrase();
   
 
     unsigned int i = 0;
@@ -48,7 +52,7 @@ int main() {
       if(midi_clock) {
         midi_clock = false;
         i = (i + 1) % phrase_now.size();
-        player.play_chord(phrase_now[i], 3, 6);    
+        player.play_chord(phrase_now[i][0], 3, phrase_now[i][1]);
       }
     }
 

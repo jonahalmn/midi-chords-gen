@@ -71,7 +71,7 @@ void Player::play_chord(int note, int octave, int number) {
         m_midiout->sendMessage( &m_message );
     }
 
-    sleep(0.3);
+    sleep(1);
 
     // Note Off
     m_message[0] = 128;
