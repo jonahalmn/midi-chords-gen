@@ -31,14 +31,6 @@ void mycallback( double deltatime, std::vector< unsigned char > *message, void *
 
 int main(int argc, char *argv[] ) {
 
-    // Range range{Note::A, 0};
-   
-
-    // std::cout << (int)range.get_note(0, 2) << std::endl;
-    
-
-    std::cout << "All is ok" << std::endl;
-
     Player player{&mycallback};
     Phrase phrase;
 

@@ -72,13 +72,6 @@ void Player::play_chord(int note, int octave, int number) {
         m_pressed.pop_back();
         m_midiout->sendMessage( &m_message );
     }
-    
-    // for (int i = m_pressed.size(); i >= 0; i--)
-    // {
-    //     m_message[1] = m_pressed[i];
-    //     m_pressed.pop_back();
-    //     m_midiout->sendMessage( &m_message );
-    // }
 
     // Note On
     m_message[0] = 144;
@@ -89,10 +82,5 @@ void Player::play_chord(int note, int octave, int number) {
         m_message[1] = pressed_note;
         m_midiout->sendMessage( &m_message );
     }
-
-    // sleep(1);
-
-    
-
 
 }
