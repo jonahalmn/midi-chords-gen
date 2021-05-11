@@ -63,23 +63,36 @@ void Player::display_available_in_devices() {
 void Player::play_chord(int note, int octave, int number) {
     m_message[2] = 90;
     
+
+    // Note Off
+    m_message[0] = 128;
+    while (m_pressed.size() > 0)
+    {
+        m_message[1] = m_pressed[m_pressed.size() - 1];
+        m_pressed.pop_back();
+        m_midiout->sendMessage( &m_message );
+    }
+    
+    // for (int i = m_pressed.size(); i >= 0; i--)
+    // {
+    //     m_message[1] = m_pressed[i];
+    //     m_pressed.pop_back();
+    //     m_midiout->sendMessage( &m_message );
+    // }
+
     // Note On
     m_message[0] = 144;
     for (int i = 0; i < number; i++)
     {
-        m_message[1] = (unsigned int)m_range.get_note(note + i * 2, octave);
+        unsigned int pressed_note = m_range.get_note(note + i * 2, octave);
+        m_pressed.push_back(pressed_note);
+        m_message[1] = pressed_note;
         m_midiout->sendMessage( &m_message );
     }
 
-    sleep(1);
+    // sleep(1);
 
-    // Note Off
-    m_message[0] = 128;
-    for (int i = 0; i < number; i++)
-    {
-        m_message[1] = (unsigned int)m_range.get_note(note + i * 2, octave);
-        m_midiout->sendMessage( &m_message );
-    }
+    
 
 
 }

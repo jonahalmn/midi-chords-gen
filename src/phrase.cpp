@@ -12,9 +12,10 @@ std::vector<std::vector<unsigned int>> Phrase::generate_phrase() {
     std::vector<std::vector<unsigned int>> notes;
     unsigned int current_state = 0;
 
+    srand((int)time(NULL));
+
     for (int i = 0; i < 7; i++)
     {
-        srand((int)time(NULL));
         notes.push_back(std::vector<unsigned int>{m_params[current_state]});
         unsigned int probability = (rand() % 1000 * (unsigned int)m_tree[current_state][m_tree[current_state].size() - 1]) / 1000;
         std::cout << probability << std::endl;
