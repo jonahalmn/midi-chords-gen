@@ -7,10 +7,13 @@ This project generates procedural melodies.
 ### Deps
 
 - rtmidi
+- nlohmann-json
 
 #### Setup & Build
 
 ``` brew install rtmidi ```
+
+``` brew install nlohmann-json ```
 
 ``` cmake . ```
 
