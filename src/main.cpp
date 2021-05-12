@@ -21,12 +21,11 @@ void mycallback( double deltatime, std::vector< unsigned char > *message, void *
   unsigned int nBytes = message->size();
   if((*message)[1] == (unsigned char)60 && (*message)[0] == (unsigned char)144) {
     midi_clock = true;
-    std::cout << "CLOCK" << std::endl;
   }
-  for ( unsigned int i=0; i<nBytes; i++ )
-    std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";
-  if ( nBytes > 0 )
-    std::cout << "stamp = " << deltatime << std::endl;
+  // for ( unsigned int i=0; i<nBytes; i++ )
+  //   // std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";
+  // if ( nBytes > 0 )
+    // std::cout << "stamp = " << deltatime << std::endl;
 }
 
 int main(int argc, char *argv[] ) {
@@ -34,17 +33,25 @@ int main(int argc, char *argv[] ) {
     Player player{&mycallback};
     Phrase phrase;
 
-    std::vector<std::vector<unsigned int>> phrase_now = phrase.generate_phrase();
+    std::vector<std::vector<unsigned int>> current_phrase = phrase.generate_phrase();
   
 
     unsigned int i = 0;
+    unsigned int delta_time = 10;
 
     while (1)
     {
-      if(midi_clock) {
+      if(midi_clock) { 
         midi_clock = false;
-        i = (i + 1) % phrase_now.size();
-        player.play_chord(phrase_now[i][0], 3, phrase_now[i][1]);
+        std::cout << "CLOCK" << std::endl;
+        std::cout << "duration: " << current_phrase[i][2] << std::endl;
+        delta_time++;
+
+        if(delta_time > current_phrase[i][2]) {
+          i = (i + 1) % current_phrase.size();
+          player.play_chord(current_phrase[i][0], 3, current_phrase[i][1]);
+          delta_time = 0;
+        }
       }
     }
 

@@ -17,13 +17,27 @@ std::vector<std::vector<unsigned int>> Phrase::generate_phrase() {
     for (int i = 0; i < 7; i++)
     {
         notes.push_back(std::vector<unsigned int>{m_params[current_state]});
+        std::cout << "m_tree.size() : " << m_tree.size() << std::endl;
+        std::cout << "current_state : " << current_state << std::endl;
+
+        notes[notes.size() - 1].push_back(floor(rand()%4) * 2 + 4);
+
         unsigned int probability = (rand() % 1000 * (unsigned int)m_tree[current_state][m_tree[current_state].size() - 1]) / 1000;
-        std::cout << probability << std::endl;
-        std::cout << m_tree[current_state][m_tree[current_state].size() - 1] << std::endl;
+        // std::cout << probability << std::endl;
+        // std::cout << m_tree[current_state][m_tree[current_state].size() - 1] << std::endl;
         unsigned int accumulator = 0;
         unsigned int j = 0;
 
-        std::cout << "probability : " << probability << std::endl;
+
+        // std::cout << "probability : " << probability << std::endl;
+
+        for (int k = 0; k < notes[i].size(); k++)
+        {
+            std::cout << notes[i][k] << ",";
+        }
+        std::cout << std::endl;
+        std::cout << std::endl;
+        
 
 
         while (accumulator < probability)
@@ -32,7 +46,7 @@ std::vector<std::vector<unsigned int>> Phrase::generate_phrase() {
             j++;
         }
         
-        current_state = j;
+        current_state = j - 1;
 
     }
 
