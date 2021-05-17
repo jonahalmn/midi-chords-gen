@@ -14,7 +14,7 @@ class Player {
         RtMidiOut *m_midiout = 0;
         RtMidiIn *m_midiin = 0;
         std::vector<unsigned char> m_message{0,0,0};
-        Range m_range{Note::A, 1};
+        Range m_range{Note::A, 0};
         std::vector<unsigned int> m_pressed;
 
     public:

@@ -11,16 +11,26 @@ Phrase::Phrase() {
 std::vector<std::vector<unsigned int>> Phrase::generate_phrase() {
     std::vector<std::vector<unsigned int>> notes;
     unsigned int current_state = 0;
+    unsigned int filled_times = 0;
 
     srand((int)time(NULL));
 
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 4; i++)
     {
         notes.push_back(std::vector<unsigned int>{m_params[current_state]});
         std::cout << "m_tree.size() : " << m_tree.size() << std::endl;
         std::cout << "current_state : " << current_state << std::endl;
+        int duration;
 
-        notes[notes.size() - 1].push_back(floor(rand()%4) * 2 + 4);
+        if(i == 3) {
+            duration = 32 - filled_times;
+        } else {
+            duration = floor(rand()%2) * 4 + 4;
+            filled_times+= duration;
+        }
+        
+        notes[notes.size() - 1].push_back(duration);
+        // notes[notes.size() - 1].push_back(4);
 
         unsigned int probability = (rand() % 1000 * (unsigned int)m_tree[current_state][m_tree[current_state].size() - 1]) / 1000;
         // std::cout << probability << std::endl;
