@@ -15,14 +15,14 @@ class Player {
         RtMidiIn *m_midiin = 0;
         std::vector<unsigned char> m_message{0,0,0};
         Range m_range{Note::A, 0};
-        std::vector<unsigned int> m_pressed;
+        std::vector<std::vector<unsigned int>> m_pressed;
 
     public:
         Player(void(double, std::vector< unsigned char >*, void*));
         void display_available_out_devices();
         void display_available_in_devices();
 
-        void play_chord(int, int, int);
+        void play_chord(int, int, int, unsigned int);
 };
 
 #endif

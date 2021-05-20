@@ -49,11 +49,12 @@ int main(int argc, char *argv[] ) {
 
         if(delta_time > current_phrase[i][2] - 1) {
           i = (i + 1) % current_phrase.size();
-          player.play_chord(current_phrase[i][0], 3, current_phrase[i][1]);
+          player.play_chord(current_phrase[i][0], 3, current_phrase[i][1], 0);
+          player.play_chord(current_phrase[i][0], 2, 2, 1);
           delta_time = 0;
         }
 
-        if(i == 0) current_phrase = phrase.generate_phrase();
+        // if(i == 0) current_phrase = phrase.generate_phrase();
       }
     }
 

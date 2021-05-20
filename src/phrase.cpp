@@ -30,16 +30,11 @@ std::vector<std::vector<unsigned int>> Phrase::generate_phrase() {
         }
         
         notes[notes.size() - 1].push_back(duration);
-        // notes[notes.size() - 1].push_back(4);
 
         unsigned int probability = (rand() % 1000 * (unsigned int)m_tree[current_state][m_tree[current_state].size() - 1]) / 1000;
-        // std::cout << probability << std::endl;
-        // std::cout << m_tree[current_state][m_tree[current_state].size() - 1] << std::endl;
         unsigned int accumulator = 0;
         unsigned int j = 0;
 
-
-        // std::cout << "probability : " << probability << std::endl;
 
         for (int k = 0; k < notes[i].size(); k++)
         {
