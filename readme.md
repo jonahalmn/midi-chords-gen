@@ -1,6 +1,6 @@
 # MIDI EMITTER
 
-This project generates procedural melodies.
+This project generates procedural chords progressions.
 
 - Mac only (CoreMidi, CoreFoundation)
 
@@ -11,14 +11,14 @@ This project generates procedural melodies.
 
 #### Setup & Build
 
-``` brew install rtmidi ```
+`brew install rtmidi`
 
-``` brew install nlohmann-json ```
+`brew install nlohmann-json`
 
-``` cmake . ```
+`cmake .`
 
-``` cmake --build . ```
+`cmake --build .`
 
 ### Run Program
 
-``` bin/main ```
+`bin/main`

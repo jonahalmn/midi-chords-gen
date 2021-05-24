@@ -8,6 +8,10 @@ Phrase::Phrase() {
     populate();
 }
 
+void Phrase::set_speed(unsigned int speed) {
+    m_speed_factor = speed;
+}
+
 std::vector<std::vector<unsigned int>> Phrase::generate_phrase() {
     std::vector<std::vector<unsigned int>> notes;
     unsigned int current_state = 0;
@@ -23,9 +27,9 @@ std::vector<std::vector<unsigned int>> Phrase::generate_phrase() {
         int duration;
 
         if(i == 3) {
-            duration = 32 - filled_times;
+            duration = (8 * m_speed_factor) - filled_times;
         } else {
-            duration = floor(rand()%2) * 4 + 4;
+            duration = (floor(rand()%2) + 1) * m_speed_factor;
             filled_times+= duration;
         }
         

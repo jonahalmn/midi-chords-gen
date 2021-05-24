@@ -1,7 +1,14 @@
 #include "../include/player.hpp"
 
-Player::Player(void(callback)(double, std::vector< unsigned char >*, void*) ) {
-    // RtMidiOut constructor
+Player *Player::s_player;
+unsigned int Player::s_current_time = 0;
+unsigned int Player::s_note_time = 10000;
+Phrase Player::s_phrase;
+std::vector<std::vector<unsigned int>> Player::s_current_phrase = Player::s_phrase.generate_phrase();
+
+Player::Player() {
+    // m_current_phrase = m_phrase.generate_phrase();
+
     try {
         m_midiout = new RtMidiOut();
         m_midiin = new RtMidiIn();
@@ -12,7 +19,7 @@ Player::Player(void(callback)(double, std::vector< unsigned char >*, void*) ) {
         // Set our callback function.  This should be done immediately after
         // opening the port to avoid having incoming messages written to the
         // queue.
-        m_midiin->setCallback( callback );
+        m_midiin->setCallback( &on_midi );
         // Don't ignore sysex, timing, or active sensing messages.
         m_midiin->ignoreTypes( false, false, false );
     }
@@ -27,6 +34,11 @@ Player::Player(void(callback)(double, std::vector< unsigned char >*, void*) ) {
     }
     
 
+}
+
+Player* Player::get_instance() {
+    if(!s_player) s_player = new Player();
+    return s_player;
 }
 
 void Player::display_available_out_devices() {
@@ -65,6 +77,31 @@ void Player::display_available_in_devices() {
         std::cout << "  Output Port #" << i+1 << ": " << portName << '\n';
     }
     std::cout << '\n';
+}
+
+void Player::on_midi( double deltatime, std::vector< unsigned char > *message, void *userData )
+{
+
+    Player *player = get_instance();
+    unsigned int nBytes = message->size();
+    if((*message)[1] == (unsigned char)60 && (*message)[0] == (unsigned char)144) {
+        // midi_clock = true;
+        std::cout << "CLOCK" << std::endl;
+        std::cout << "CLOCK" << std::endl;
+        std::cout << "duration: " << s_current_phrase[s_current_time][2] << std::endl;
+        s_note_time++;
+
+        if(s_note_time > s_current_phrase[s_current_time][2] - 1) {
+            s_current_time = (s_current_time + 1) % s_current_phrase.size();
+            player->play_chord(s_current_phrase[s_current_time][0], 3, s_current_phrase[s_current_time][1], 0);
+            player->play_chord(s_current_phrase[s_current_time][0], 2, 2, 1);
+            s_note_time = 0;
+        }
+    }
+  // for ( unsigned int i=0; i<nBytes; i++ )
+  //   // std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";
+  // if ( nBytes > 0 )
+    // std::cout << "stamp = " << deltatime << std::endl;
 }
 
 void Player::play_chord(int note, int octave, int number, unsigned int channel) {
