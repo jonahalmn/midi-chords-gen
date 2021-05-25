@@ -10,7 +10,7 @@ class Phrase {
     protected:
         std::vector<std::vector<unsigned int>> m_params;
         nlohmann::json m_tree;
-        unsigned int m_speed_factor = 4;
+        unsigned int m_speed_factor = 8;
 
     public:
         Phrase();

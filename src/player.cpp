@@ -4,6 +4,7 @@ Player *Player::s_player;
 unsigned int Player::s_current_time = 0;
 unsigned int Player::s_note_time = 10000;
 Phrase Player::s_phrase;
+
 std::vector<std::vector<unsigned int>> Player::s_current_phrase = Player::s_phrase.generate_phrase();
 
 Player::Player() {
@@ -12,14 +13,29 @@ Player::Player() {
     try {
         m_midiout = new RtMidiOut();
         m_midiin = new RtMidiIn();
+        m_midiclock = new RtMidiIn();
         display_available_out_devices();
-        m_midiout->openPort( 1 );
-        m_midiin->openPort( 0 );
+
+        int out_port;
+        std::cout << "choose midi out port : ";
+        std::cin >> out_port;
+        m_midiout->openPort( out_port );
+
+        int in_port;
+        std::cout << "choose midi in port : ";
+        std::cin >> in_port;
+        m_midiin->openPort( in_port );
+
+        int clock_port;
+        std::cout << "choose midi clock port : ";
+        std::cin >> clock_port;
+        m_midiclock->openPort( clock_port );
 
         // Set our callback function.  This should be done immediately after
         // opening the port to avoid having incoming messages written to the
         // queue.
         m_midiin->setCallback( &on_midi );
+        m_midiclock->setCallback( &on_midi );
         // Don't ignore sysex, timing, or active sensing messages.
         m_midiin->ignoreTypes( false, false, false );
     }
@@ -55,7 +71,7 @@ void Player::display_available_out_devices() {
             delete m_midiout;
             exit(EXIT_FAILURE);
         }
-        std::cout << "  Output Port #" << i+1 << ": " << portName << '\n';
+        std::cout << i << ": " << portName << '\n';
     }
     std::cout << '\n';
 }

@@ -5,6 +5,22 @@ Phrase::Phrase() {
     std::ifstream file("data/data.json");
     file >> m_tree;
 
+    int user_input = 0;
+
+    while (!user_input)
+    {
+        std::cout << "choose a speed factor: ";
+        std::cin >> user_input;
+        std::cout << std::endl;
+
+        if(user_input < 0 || user_input > 100) {
+            std::cout << "invalid factor" << std::endl;
+            user_input = 0;
+        }
+    }
+
+    m_speed_factor = (unsigned int)user_input;
+
     populate();
 }
 
