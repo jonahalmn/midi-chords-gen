@@ -35,7 +35,8 @@ class Player {
         void play_chord(int, int, int, unsigned int);
 
         static Player* get_instance();
-        static void on_midi( double deltatime, std::vector< unsigned char > *message, void *userData);
+        static void on_midi_clock( double deltatime, std::vector< unsigned char > *message, void *userData);
+        static void on_midi_in( double deltatime, std::vector< unsigned char > *message, void *userData);
 };
 
 #endif

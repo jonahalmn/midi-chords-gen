@@ -4,6 +4,7 @@ Player *Player::s_player;
 unsigned int Player::s_current_time = 0;
 unsigned int Player::s_note_time = 10000;
 Phrase Player::s_phrase;
+bool Player::s_need_regeneration = false;
 
 std::vector<std::vector<unsigned int>> Player::s_current_phrase = Player::s_phrase.generate_phrase();
 
@@ -34,8 +35,8 @@ Player::Player() {
         // Set our callback function.  This should be done immediately after
         // opening the port to avoid having incoming messages written to the
         // queue.
-        m_midiin->setCallback( &on_midi );
-        m_midiclock->setCallback( &on_midi );
+        m_midiin->setCallback( &on_midi_in );
+        m_midiclock->setCallback( &on_midi_clock );
         // Don't ignore sysex, timing, or active sensing messages.
         m_midiin->ignoreTypes( false, false, false );
     }
@@ -95,16 +96,14 @@ void Player::display_available_in_devices() {
     std::cout << '\n';
 }
 
-void Player::on_midi( double deltatime, std::vector< unsigned char > *message, void *userData )
+void Player::on_midi_clock( double deltatime, std::vector< unsigned char > *message, void *userData )
 {
 
     Player *player = get_instance();
     unsigned int nBytes = message->size();
     if((*message)[1] == (unsigned char)60 && (*message)[0] == (unsigned char)144) {
-        // midi_clock = true;
         std::cout << "CLOCK" << std::endl;
-        std::cout << "CLOCK" << std::endl;
-        std::cout << "duration: " << s_current_phrase[s_current_time][2] << std::endl;
+        // std::cout << "duration: " << s_current_phrase[s_current_time][2] << std::endl;
         s_note_time++;
 
         if(s_note_time > s_current_phrase[s_current_time][2] - 1) {
@@ -112,12 +111,53 @@ void Player::on_midi( double deltatime, std::vector< unsigned char > *message, v
             player->play_chord(s_current_phrase[s_current_time][0], 3, s_current_phrase[s_current_time][1], 0);
             player->play_chord(s_current_phrase[s_current_time][0], 2, 2, 1);
             s_note_time = 0;
+            std::cout << "curr time -> " << s_current_time << std::endl;
+            if(s_current_time == 1 && s_need_regeneration) {
+                std::cout << "restart" << std::endl;
+                s_current_phrase = s_phrase.generate_phrase();
+            }
         }
     }
   // for ( unsigned int i=0; i<nBytes; i++ )
   //   // std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";
   // if ( nBytes > 0 )
     // std::cout << "stamp = " << deltatime << std::endl;
+}
+
+void Player::on_midi_in( double deltatime, std::vector< unsigned char > *message, void *userData )
+{
+    
+    if((*message)[0] == (unsigned char)176 && (*message)[1] == (unsigned char)0) {
+        std::cout << (int)message->at(2) << std::endl;
+
+        s_phrase.set_speed(2);
+
+        if((int)message->at(2) > 32) {
+            s_phrase.set_speed(4);
+        }
+
+        if((int)message->at(2) > 64) {
+            s_phrase.set_speed(8);
+        }
+
+        if(s_current_time == 0) {
+            s_need_regeneration = true;
+        }
+    }
+
+    // if((*message)[0] == (unsigned char)179 && (*message)[1] == (unsigned char)1) {
+    //     // std::cout << "melody axis y" << std::endl;
+    // }
+
+    // if((*message)[0] == (unsigned char)179 && (*message)[1] == (unsigned char)2) {
+    //     // std::cout << "melody axis z" << std::endl;
+    // }
+
+    // unsigned int nBytes = message->size();
+    // for ( unsigned int i=0; i<nBytes; i++ )
+    //     std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";
+    // if ( nBytes > 0 )
+    //     std::cout << "stamp = " << deltatime << std::endl;
 }
 
 void Player::play_chord(int note, int octave, int number, unsigned int channel) {
