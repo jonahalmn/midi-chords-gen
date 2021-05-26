@@ -104,10 +104,9 @@ void Player::on_midi_clock( double deltatime, std::vector< unsigned char > *mess
     if((*message)[1] == (unsigned char)60 && (*message)[0] == (unsigned char)144) {
         std::cout << "CLOCK" << std::endl;
         // std::cout << "duration: " << s_current_phrase[s_current_time][2] << std::endl;
-        s_note_time++;
 
-        if(s_note_time > s_current_phrase[s_current_time][2] - 1) {
-            s_current_time = (s_current_time + 1) % s_current_phrase.size();
+        if(s_note_time > s_current_phrase[s_current_time][2] +  1) {
+            
             player->play_chord(s_current_phrase[s_current_time][0], 3, s_current_phrase[s_current_time][1], 0);
             player->play_chord(s_current_phrase[s_current_time][0], 2, 2, 1);
             s_note_time = 0;
@@ -116,7 +115,10 @@ void Player::on_midi_clock( double deltatime, std::vector< unsigned char > *mess
                 std::cout << "restart" << std::endl;
                 s_current_phrase = s_phrase.generate_phrase();
             }
+            s_current_time = (s_current_time + 1) % s_current_phrase.size();
         }
+        s_note_time++;
+        std::cout << s_note_time << std::endl;
     }
   // for ( unsigned int i=0; i<nBytes; i++ )
   //   // std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";
@@ -130,14 +132,14 @@ void Player::on_midi_in( double deltatime, std::vector< unsigned char > *message
     if((*message)[0] == (unsigned char)176 && (*message)[1] == (unsigned char)0) {
         std::cout << (int)message->at(2) << std::endl;
 
-        s_phrase.set_speed(2);
+        s_phrase.set_speed(4);
 
         if((int)message->at(2) > 32) {
             s_phrase.set_speed(4);
         }
 
         if((int)message->at(2) > 64) {
-            s_phrase.set_speed(8);
+            s_phrase.set_speed(4);
         }
 
         if(s_current_time == 0) {
