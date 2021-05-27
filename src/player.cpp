@@ -9,8 +9,6 @@ bool Player::s_need_regeneration = false;
 std::vector<std::vector<unsigned int>> Player::s_current_phrase = Player::s_phrase.generate_phrase();
 
 Player::Player() {
-    // m_current_phrase = m_phrase.generate_phrase();
-
     try {
         m_midiout = new RtMidiOut();
         m_midiin = new RtMidiIn();
@@ -114,6 +112,7 @@ void Player::on_midi_clock( double deltatime, std::vector< unsigned char > *mess
             if(s_current_time == 1 && s_need_regeneration) {
                 std::cout << "restart" << std::endl;
                 s_current_phrase = s_phrase.generate_phrase();
+                s_need_regeneration = false;
             }
             s_current_time = (s_current_time + 1) % s_current_phrase.size();
         }
@@ -129,8 +128,8 @@ void Player::on_midi_clock( double deltatime, std::vector< unsigned char > *mess
 void Player::on_midi_in( double deltatime, std::vector< unsigned char > *message, void *userData )
 {
     
+    std::cout << (int)message->at(0) << std::endl;
     if((*message)[0] == (unsigned char)176 && (*message)[1] == (unsigned char)0) {
-        std::cout << (int)message->at(2) << std::endl;
 
         s_phrase.set_speed(4);
 

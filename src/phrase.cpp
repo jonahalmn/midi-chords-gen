@@ -37,9 +37,9 @@ std::vector<std::vector<unsigned int>> Phrase::generate_phrase() {
 
     for (int i = 0; i < 4; i++)
     {
-        notes.push_back(std::vector<unsigned int>{m_params[current_state]});
         std::cout << "m_tree.size() : " << m_tree.size() << std::endl;
         std::cout << "current_state : " << current_state << std::endl;
+        notes.push_back(std::vector<unsigned int>{m_params[current_state]});
         int duration;
 
         if(i == 3) {
@@ -65,11 +65,11 @@ std::vector<std::vector<unsigned int>> Phrase::generate_phrase() {
         
 
 
-        while (accumulator < probability)
-        {
+        
+        do {
             accumulator += (unsigned int)m_tree[current_state][j];
             j++;
-        }
+        } while (accumulator < probability);
         
         current_state = j - 1;
 
