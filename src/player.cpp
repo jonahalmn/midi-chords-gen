@@ -76,7 +76,7 @@ void Player::display_available_out_devices() {
 }
 
 void Player::display_available_in_devices() {
-        // Check outputs.
+    // Check outputs.
     unsigned int nPorts = m_midiout->getPortCount();
     std::cout << "\nThere are " << nPorts << " MIDI output ports available.\n";
     std::string portName;
@@ -111,7 +111,7 @@ void Player::phrase_tick() {
         s_current_time = (s_current_time + 1) % s_current_phrase.size();
     }
     s_note_time++;
-    std::cout << s_note_time << std::endl;
+    // std::cout << s_note_time << std::endl;
 }
 
 void Player::drums_tick() {
@@ -123,18 +123,12 @@ void Player::on_midi_clock( double deltatime, std::vector< unsigned char > *mess
      unsigned int nBytes = message->size();
     // note clock
     if((*message)[1] == (unsigned char)60 && (*message)[0] == (unsigned char)144) {
-        // std::cout << "CLOCK" << std::endl;
-        // std::cout << "duration: " << s_current_phrase[s_current_time][2] << std::endl;
         phrase_tick();
-        drums_tick();
-
     }
 
     // drums clock
     if((*message)[1] == (unsigned char)60 && (*message)[0] == (unsigned char)145) {
-        // std::cout << "CLOCK" << std::endl;
         drums_tick();
-
     }
         
     // for ( unsigned int i=0; i<nBytes; i++ )
@@ -146,7 +140,7 @@ void Player::on_midi_clock( double deltatime, std::vector< unsigned char > *mess
 void Player::on_midi_in( double deltatime, std::vector< unsigned char > *message, void *userData )
 {
     
-    std::cout << (int)message->at(0) << std::endl;
+    // std::cout << (int)message->at(0) << std::endl;
     if((*message)[0] == (unsigned char)176 && (*message)[1] == (unsigned char)0) {
 
         s_phrase.set_speed(4);
@@ -187,10 +181,7 @@ void Player::play_chord(int note, int octave, int number, unsigned int channel) 
         return;
     }
 
-    std::cout << "channel: " << channel << std::endl;
-
     unsigned int first_byte = 128 + channel;
-    std::cout << "fb : " << first_byte << std::endl;
 
     // Note Off
     m_message[0] = first_byte;
@@ -204,7 +195,6 @@ void Player::play_chord(int note, int octave, int number, unsigned int channel) 
     }
 
     first_byte = 144 + channel;
-    std::cout << "fb : " << first_byte << std::endl;
 
     // Note On
     m_message[0] = first_byte;

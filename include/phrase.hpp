@@ -18,4 +18,5 @@ class Phrase {
         void populate();
         void set_speed(unsigned int);
         std::vector<std::vector<unsigned int>> generate_phrase();
+        std::vector<std::vector<unsigned int>> generate_drums_phrase();
 };
