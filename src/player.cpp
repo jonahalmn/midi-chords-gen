@@ -94,35 +94,53 @@ void Player::display_available_in_devices() {
     std::cout << '\n';
 }
 
+void Player::phrase_tick() {
+    Player *player = get_instance();
+   
+    if(s_note_time > s_current_phrase[s_current_time][2] +  1) {
+        
+        player->play_chord(s_current_phrase[s_current_time][0], 3, s_current_phrase[s_current_time][1], 0);
+        player->play_chord(s_current_phrase[s_current_time][0], 2, 2, 1);
+        s_note_time = 0;
+        // std::cout << "curr time -> " << s_current_time << std::endl;
+        if(s_current_time == 1 && s_need_regeneration) {
+            std::cout << "restart" << std::endl;
+            s_current_phrase = s_phrase.generate_phrase();
+            s_need_regeneration = false;
+        }
+        s_current_time = (s_current_time + 1) % s_current_phrase.size();
+    }
+    s_note_time++;
+    std::cout << s_note_time << std::endl;
+}
+
+void Player::drums_tick() {
+    std::cout << "drums clock" << std::endl;
+}
+
 void Player::on_midi_clock( double deltatime, std::vector< unsigned char > *message, void *userData )
 {
-
-    Player *player = get_instance();
-    unsigned int nBytes = message->size();
+     unsigned int nBytes = message->size();
+    // note clock
     if((*message)[1] == (unsigned char)60 && (*message)[0] == (unsigned char)144) {
-        std::cout << "CLOCK" << std::endl;
+        // std::cout << "CLOCK" << std::endl;
         // std::cout << "duration: " << s_current_phrase[s_current_time][2] << std::endl;
+        phrase_tick();
+        drums_tick();
 
-        if(s_note_time > s_current_phrase[s_current_time][2] +  1) {
-            
-            player->play_chord(s_current_phrase[s_current_time][0], 3, s_current_phrase[s_current_time][1], 0);
-            player->play_chord(s_current_phrase[s_current_time][0], 2, 2, 1);
-            s_note_time = 0;
-            std::cout << "curr time -> " << s_current_time << std::endl;
-            if(s_current_time == 1 && s_need_regeneration) {
-                std::cout << "restart" << std::endl;
-                s_current_phrase = s_phrase.generate_phrase();
-                s_need_regeneration = false;
-            }
-            s_current_time = (s_current_time + 1) % s_current_phrase.size();
-        }
-        s_note_time++;
-        std::cout << s_note_time << std::endl;
     }
-  // for ( unsigned int i=0; i<nBytes; i++ )
-  //   // std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";
-  // if ( nBytes > 0 )
-    // std::cout << "stamp = " << deltatime << std::endl;
+
+    // drums clock
+    if((*message)[1] == (unsigned char)60 && (*message)[0] == (unsigned char)145) {
+        // std::cout << "CLOCK" << std::endl;
+        drums_tick();
+
+    }
+        
+    // for ( unsigned int i=0; i<nBytes; i++ )
+    //     std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";
+    // if ( nBytes > 0 )
+    //     std::cout << "stamp = " << deltatime << std::endl;
 }
 
 void Player::on_midi_in( double deltatime, std::vector< unsigned char > *message, void *userData )
