@@ -6,6 +6,7 @@ unsigned int Player::s_current_drums_time = 0;
 unsigned int Player::s_note_time = 10000;
 Phrase Player::s_phrase;
 bool Player::s_need_regeneration = false;
+bool Player::s_need_modulation = false;
 
 std::vector<std::vector<unsigned int>> Player::s_current_phrase =
     Player::s_phrase.generate_phrase();
@@ -101,6 +102,9 @@ void Player::phrase_tick() {
     player->play_chord(s_current_phrase[s_current_time][0], 2, 2, 1);
     s_note_time = 0;
     // std::cout << "curr time -> " << s_current_time << std::endl;
+    if (s_current_time == 1 && s_need_modulation) {
+      player->modulate();
+    }
     if (s_current_time == 1 && s_need_regeneration) {
       std::cout << "restart" << std::endl;
       s_current_phrase = s_phrase.generate_phrase();
@@ -110,6 +114,52 @@ void Player::phrase_tick() {
   }
   s_note_time++;
   // std::cout << s_note_time << std::endl;
+}
+
+void Player::modulate() {
+  // std::cout << "modulation, current fundamental is : "
+  //           << m_range.get_fundamental() << std::endl;
+  switch (m_range.get_fundamental()) {
+  case C:
+    m_range.set_fundamental(Note::F);
+    break;
+  case C_SHARP:
+    m_range.set_fundamental(Note::F_SHARP);
+    break;
+  case D:
+    m_range.set_fundamental(Note::G);
+    break;
+  case D_SHARP:
+    m_range.set_fundamental(Note::G_SHARP);
+    break;
+  case E:
+    m_range.set_fundamental(Note::A);
+    break;
+  case F:
+    m_range.set_fundamental(Note::A_SHARP);
+    break;
+  case F_SHARP:
+    m_range.set_fundamental(Note::B);
+    break;
+  case G:
+    m_range.set_fundamental(Note::C);
+    break;
+  case G_SHARP:
+    m_range.set_fundamental(Note::C_SHARP);
+    break;
+  case A:
+    m_range.set_fundamental(Note::D);
+    break;
+  case A_SHARP:
+    m_range.set_fundamental(Note::D_SHARP);
+    break;
+  case B:
+    m_range.set_fundamental(Note::E);
+    break;
+  default:
+    assert(!"Invalid Note value");
+    break;
+  }
 }
 
 void Player::drums_tick() {
@@ -160,7 +210,13 @@ void Player::on_midi_in(double deltatime, std::vector<unsigned char> *message,
       s_need_regeneration = true;
     }
   }
+  if ((*message)[0] == (unsigned char)176 &&
+      (*message)[1] == (unsigned char)2) {
 
+    if (s_current_time == 0) {
+      s_need_modulation = true;
+    }
+  }
   // if((*message)[0] == (unsigned char)179 && (*message)[1] == (unsigned
   // char)1) {
   //     // std::cout << "melody axis y" << std::endl;

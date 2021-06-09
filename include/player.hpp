@@ -29,12 +29,14 @@ protected:
   static std::vector<std::vector<unsigned int>> s_current_phrase;
   static Phrase s_phrase;
   static bool s_need_regeneration;
+  static bool s_need_modulation;
 
 public:
   void display_available_out_devices();
   void display_available_in_devices();
 
   void play_chord(int, int, int, unsigned int);
+  void modulate();
 
   static void phrase_tick();
   static void drums_tick();
