@@ -2,6 +2,7 @@
 
 Player *Player::s_player;
 unsigned int Player::s_current_time = 0;
+unsigned int Player::s_current_drums_time = 0;
 unsigned int Player::s_note_time = 10000;
 Phrase Player::s_phrase;
 bool Player::s_need_regeneration = false;
@@ -115,7 +116,8 @@ void Player::phrase_tick() {
 }
 
 void Player::drums_tick() {
-    std::cout << "drums clock" << std::endl;
+    s_current_drums_time = (s_current_drums_time + 1) % 64;
+    std::cout << "drums clock : " << s_current_drums_time << std::endl;
 }
 
 void Player::on_midi_clock( double deltatime, std::vector< unsigned char > *message, void *userData )

@@ -12,3 +12,4 @@
 !.vscode/**/**
 !data
 !data/**/**
+!.clang-format

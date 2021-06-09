@@ -21,6 +21,8 @@ class Player {
 
         Player();
 
+        static unsigned int s_current_drums_time;
+
         static unsigned int s_current_time;
         static unsigned int s_note_time;
         static Player *s_player;
