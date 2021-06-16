@@ -105,7 +105,7 @@ void Player::phrase_tick() {
     if (s_current_time == 1 && s_need_modulation) {
       player->modulate();
     }
-    if (s_current_time == 1 && s_need_regeneration) {
+    if (s_current_time == 0 && s_need_regeneration) {
       std::cout << "restart" << std::endl;
       s_current_phrase = s_phrase.generate_phrase();
       s_need_regeneration = false;
@@ -117,8 +117,8 @@ void Player::phrase_tick() {
 }
 
 void Player::modulate() {
-  // std::cout << "modulation, current fundamental is : "
-  //           << m_range.get_fundamental() << std::endl;
+  std::cout << "modulation, current fundamental is : "
+            << m_range.get_fundamental() << std::endl;
   switch (m_range.get_fundamental()) {
   case C:
     m_range.set_fundamental(Note::F);
@@ -164,7 +164,7 @@ void Player::modulate() {
 
 void Player::drums_tick() {
   s_current_drums_time = (s_current_drums_time + 1) % 64;
-  std::cout << "drums clock : " << s_current_drums_time << std::endl;
+  //   std::cout << "drums clock : " << s_current_drums_time << std::endl;
 }
 
 void Player::on_midi_clock(double deltatime,
@@ -183,9 +183,9 @@ void Player::on_midi_clock(double deltatime,
     drums_tick();
   }
 
-  // for ( unsigned int i=0; i<nBytes; i++ )
+  //   for (unsigned int i = 0; i < nBytes; i++)
   //     std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";
-  // if ( nBytes > 0 )
+  //   if (nBytes > 0)
   //     std::cout << "stamp = " << deltatime << std::endl;
 }
 
@@ -194,7 +194,7 @@ void Player::on_midi_in(double deltatime, std::vector<unsigned char> *message,
 
   // std::cout << (int)message->at(0) << std::endl;
   if ((*message)[0] == (unsigned char)176 &&
-      (*message)[1] == (unsigned char)0) {
+      (*message)[1] == (unsigned char)2) {
 
     s_phrase.set_speed(4);
 
@@ -206,17 +206,19 @@ void Player::on_midi_in(double deltatime, std::vector<unsigned char> *message,
       s_phrase.set_speed(4);
     }
 
-    if (s_current_time == 0) {
+    if (s_current_time == 3) {
+      std::cout << "generation asked" << std::endl;
       s_need_regeneration = true;
     }
   }
-  if ((*message)[0] == (unsigned char)176 &&
-      (*message)[1] == (unsigned char)2) {
 
-    if (s_current_time == 0) {
-      s_need_modulation = true;
-    }
-  }
+  //   if ((*message)[0] == (unsigned char)176 &&
+  //       (*message)[1] == (unsigned char)2) {
+
+  //     if (s_current_time == 0) {
+  //       s_need_modulation = true;
+  //     }
+  //   }
   // if((*message)[0] == (unsigned char)179 && (*message)[1] == (unsigned
   // char)1) {
   //     // std::cout << "melody axis y" << std::endl;
@@ -227,10 +229,10 @@ void Player::on_midi_in(double deltatime, std::vector<unsigned char> *message,
   //     // std::cout << "melody axis z" << std::endl;
   // }
 
-  // unsigned int nBytes = message->size();
-  // for ( unsigned int i=0; i<nBytes; i++ )
+  //   unsigned int nBytes = message->size();
+  //   for (unsigned int i = 0; i < nBytes; i++)
   //     std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";
-  // if ( nBytes > 0 )
+  //   if (nBytes > 0)
   //     std::cout << "stamp = " << deltatime << std::endl;
 }
 
