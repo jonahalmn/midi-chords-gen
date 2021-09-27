@@ -4,6 +4,7 @@
 !/src
 !/src/**/**
 !CMakeLists.txt
+!CMakeLists.win.txt
 !readme.md
 !lib
 !include
