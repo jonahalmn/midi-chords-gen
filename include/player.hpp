@@ -4,7 +4,7 @@
 #include <CoreFoundation/CFRunLoop.h>
 #include <CoreMIDI/CoreMIDI.h>
 #include <iostream>
-#include <rtmidi.h>
+#include <rtmidi/rtmidi.h>
 
 #include "notes.hpp"
 #include "phrase.hpp"

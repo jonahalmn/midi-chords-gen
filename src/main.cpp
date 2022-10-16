@@ -2,7 +2,7 @@
 #include <CoreMIDI/CoreMIDI.h>
 #include <fstream>
 #include <iostream>
-#include <rtmidi.h>
+#include <rtmidi/rtmidi.h>
 #include <string>
 #include <vector>
 
